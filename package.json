@@ -4,6 +4,7 @@
   "description": "Application for managing your daily tasks",
   "main": "server/server.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "mocha --recursive test"
   },
   "repository": {

@@ -7,6 +7,7 @@ const
   dbHandler = require('./db/dbHandler');
 
 let app = express();
+let port = porcess.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
@@ -42,8 +43,8 @@ app.route('/todos/:id')
     })
   })
 
-app.listen(3000, () => {
-  console.log('Server started on port 3000');
+app.listen(port, () => {
+  console.log(`Started up at port ${port}`);
 });
 
 module.exports = {app};
