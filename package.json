@@ -1,9 +1,10 @@
 {
   "name": "todo-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Application for managing your daily tasks",
   "main": "server/server.js",
   "scripts": {
+    "start": "node server/server.js",
     "test": "mocha --recursive test"
   },
   "repository": {
