@@ -45,7 +45,7 @@ function findTodo(id) {
       return reject({
         code: 400,
         message: 'ID not valid'
-      })
+      });
     }
     Todo.findById(id).then((todo) => {
       if (!todo) {
@@ -61,14 +61,43 @@ function findTodo(id) {
       console.error('An error happened in findTodo.', err);
       reject({
         code: 400,
-        message: 'An error ocurred fetching the todo'
-      })
+        message: 'An error happened fetching the todo'
+      });
     })
+  });
+}
+
+function removeTodo(id) {
+  return new Promise((resolve, reject) => {
+    if (!ObjectID.isValid(id)) {
+      return reject({
+        code: 400,
+        message: 'ID not valid'
+      });
+    }
+
+    Todo.findByIdAndRemove(id).then((todo) => {
+      if (!todo) {
+        return reject({
+          code: 404,
+          message: 'ID not found'
+        });
+      }
+      resolve({
+        data: todo
+      })
+    }).catch((err) => {
+      reject({
+        code: 400,
+        message: 'An error happened removing the todo'
+      })
+    });
   });
 }
 
 module.exports = {
   findTodos,
   saveTodo,
-  findTodo
+  findTodo,
+  removeTodo
 }
