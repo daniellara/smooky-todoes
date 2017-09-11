@@ -40,7 +40,17 @@ app.route('/todos/:id')
     }).catch((err) => {
       console.error('There was an error fetching the todo.', err);
       res.status(err.code).send({message: err.message});
-    })
+    });
+  })
+  .delete((req, res) => {
+    dbHandler.removeTodo(req.params.id).then((value) => {
+      res.send({
+        todo: value.data
+      });
+    }).catch((err) => {
+      console.error('There was an error removing the todo', err);
+      res.status(err.code).send({message: err.message});
+    });
   })
 
 app.listen(port, () => {
