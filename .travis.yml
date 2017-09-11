@@ -6,6 +6,7 @@ node_js:
 branches:
   only:
     - develop
+    - master
 
 services:
   - mongodb
