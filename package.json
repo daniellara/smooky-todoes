@@ -1,6 +1,6 @@
 {
   "name": "todo-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Application for managing your daily tasks",
   "main": "server/server.js",
   "scripts": {
