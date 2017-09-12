@@ -1,49 +1,47 @@
 const expect = require('expect');
 const request = require('supertest');
-const {ObjectID} = require('mongodb');
+const { ObjectID } = require('mongodb');
 
-const {app} = require('../server/server');
-const {Todo} = require('../server/models/todo');
+const { app } = require('../server/server');
+const { Todo } = require('../server/models/todo');
 
 const todos = [
   {
     _id: new ObjectID(),
-    text: 'First test todo'
+    text: 'First test todo',
   },
   {
     _id: new ObjectID(),
-    text: 'Second test todo'
-  }
+    text: 'Second test todo',
+  },
 ];
 
 beforeEach((done) => {
-  Todo.remove({}).then(() => {
-    return Todo.insertMany(todos);
-  }).then(() => done());
+  Todo.remove({}).then(() => Todo.insertMany(todos)).then(() => done());
 });
 
 describe('Server', () => {
   describe('POST /todos', () => {
     it('should create a new todo', (done) => {
-      let text = 'Test todo text';
+      const text = 'Test todo text';
 
       request(app)
         .post('/todos')
-        .send({text})
+        .send({ text })
         .expect(200)
-        .expect((res) =>{
-          expect(res.body.text).toBe(text)
+        .expect((res) => {
+          expect(res.body.text).toBe(text);
         })
-        .end((err, res) => {
+        .end((err) => {
           if (err) {
             return done(err);
           }
 
-          Todo.find({text}).then((todos) => {
-            expect(todos.length).toBe(1);
-            expect(todos[0].text).toBe(text);
+          Todo.find({ text }).then((result) => {
+            expect(result.length).toBe(1);
+            expect(result[0].text).toBe(text);
             done();
-          }).catch((err) => done(err));
+          }).catch(error => done(error));
         });
     });
 
@@ -52,15 +50,15 @@ describe('Server', () => {
         .post('/todos')
         .send({})
         .expect(400)
-        .end((err, res) => {
+        .end((err) => {
           if (err) {
             return done(err);
           }
 
-          Todo.find().then((todos) => {
-            expect(todos.length).toBe(2);
+          Todo.find().then((result) => {
+            expect(result.length).toBe(2);
             done();
-          }).catch((err) => done(err));
+          }).catch(error => done(error));
         });
     });
   });
@@ -71,7 +69,7 @@ describe('Server', () => {
         .get('/todos')
         .expect(200)
         .expect((res) => {
-          expect(res.body.todos.length).toBe(2)
+          expect(res.body.todos.length).toBe(2);
         })
         .end(done);
     });
@@ -111,7 +109,7 @@ describe('Server', () => {
         .expect((res) => {
           expect(res.body.todo._id).toBe(todos[0]._id.toHexString());
         })
-        .end((err, res) => {
+        .end((err) => {
           if (err) {
             return done(err);
           }
@@ -119,7 +117,7 @@ describe('Server', () => {
           Todo.findById(todos[0]._id.toHexString()).then((todo) => {
             expect(todo).toNotExist();
             done();
-          }).catch((err) => done(err));
+          }).catch(error => done(error));
         });
     });
 
