@@ -5,7 +5,7 @@
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
-    "test": "mocha --recursive test",
+    "test": "export NODE_ENV=test || SET \"NODE_ENV=test\" && mocha --recursive test",
     "lint": "eslint server test --max-warnings 0",
     "travis": "npm run lint && npm run test"
   },
