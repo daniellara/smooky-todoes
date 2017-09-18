@@ -4,7 +4,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const mongoose = require('./db/mongoose');
-const { router } = require('./routes/router.js');
+const { todosRouter } = require('./routes/todosRouter.js');
 
 const app = express();
 const port = process.env.PORT;
@@ -12,7 +12,7 @@ const port = process.env.PORT;
 mongoose.connectToMongoDB();
 
 app.use(bodyParser.json());
-app.use('/', router);
+app.use('/todos', todosRouter);
 
 app.listen(port);
 

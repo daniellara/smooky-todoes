@@ -1,10 +1,10 @@
 const express = require('express');
 
-const router = express.Router();
+const todosRouter = express.Router();
 const dbHandler = require('../db/dbHandler');
 const _ = require('lodash');
 
-router.route('/todos')
+todosRouter.route('/')
   .get((req, res) => {
     dbHandler.findTodos().then((value) => {
       res.send({
@@ -22,7 +22,7 @@ router.route('/todos')
     });
   });
 
-router.route('/todos/:id')
+todosRouter.route('/:id')
   .get((req, res) => {
     dbHandler.findTodo(req.params.id).then((value) => {
       res.send({
@@ -53,4 +53,4 @@ router.route('/todos/:id')
     });
   });
 
-module.exports = { router };
+module.exports = { todosRouter };
