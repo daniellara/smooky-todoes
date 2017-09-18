@@ -1,7 +1,7 @@
 const express = require('express');
 
 const todosRouter = express.Router();
-const dbHandler = require('../db/dbHandler');
+const dbHandler = require('../db/todosHandler');
 const _ = require('lodash');
 
 todosRouter.route('/')
