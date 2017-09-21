@@ -12,24 +12,24 @@ const User = mongoose.model('User', {
       validator: (value) => {
         validator.isEmail(value);
       },
-      message: 'Please insert a valid email.',
-    },
+      message: 'Please insert a valid email.'
+    }
   },
   password: {
     type: String,
     required: true,
-    minlength: 6,
+    minlength: 6
   },
   tokens: [{
     access: {
       type: String,
-      required: true,
+      required: true
     },
     token: {
       type: String,
-      required: true,
-    },
-  }],
+      required: true
+    }
+  }]
 });
 
 module.exports = { User };

@@ -8,24 +8,24 @@ const { Todo } = require('../server/models/todo');
 const todos = [
   {
     _id: new ObjectID(),
-    text: 'First test todo',
+    text: 'First test todo'
   },
   {
     _id: new ObjectID(),
     text: 'Second test todo',
     completed: true,
-    completedAt: 333,
-  },
+    completedAt: 333
+  }
 ];
 
 const updatedFirst = {
   text: 'Todo updated from test',
-  completed: true,
+  completed: true
 };
 
 const updatedSecond = {
   text: 'Second todo updated from test',
-  completed: false,
+  completed: false
 };
 
 beforeEach((done) => {
