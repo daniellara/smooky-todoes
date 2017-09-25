@@ -1,3 +1,6 @@
+/**
+ * Mongoose model for Todos
+ */
 const mongoose = require('mongoose');
 
 const Todo = mongoose.model('Todo', {

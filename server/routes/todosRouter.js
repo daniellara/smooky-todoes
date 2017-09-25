@@ -1,8 +1,15 @@
+/**
+ * Todos routes file
+ */
 const express = require('express');
 
 const todosRouter = express.Router();
 const todosController = require('../controllers/todosController');
 
+/**
+ * GET  /todos -> retrieve all Todos
+ * POST /todos -> insert a Todo in the DB
+ */
 todosRouter.route('/')
   .get((req, res) => {
     todosController.getTodos()
@@ -23,6 +30,11 @@ todosRouter.route('/')
       });
   });
 
+/**
+ * GET    /todos/:id -> retrieve the Todo that matchs with the id
+ * DELETE /todos/:id -> delete the Todo that matchs with the id
+ * PATCH  /todos/:id -> update the Todo that matchs with the id
+ */
 todosRouter.route('/:id')
   .get((req, res) => {
     todosController.getTodo(req.params.id)

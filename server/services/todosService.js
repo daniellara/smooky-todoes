@@ -1,5 +1,12 @@
+// Service layer for the Todos.
 const { Todo } = require('../models/todo');
 
+/**
+ * Retrieve all the Todos from the DB
+ *
+ * @method findTodos
+ * @return {Promise} If no error it will return an array of Todos
+ */
 function findTodos() {
   return new Promise((resolve, reject) => {
     Todo.find().then((todos) => {
@@ -16,6 +23,12 @@ function findTodos() {
   });
 }
 
+/**
+ * Save a Todo in the DB
+ *
+ * @param {Object} todo To save in the DB
+ * @return {Promise} If no error it will return the Todo saved
+ */
 function saveTodo(todo) {
   return new Promise((resolve, reject) => {
     todo.save().then((doc) => {
@@ -32,6 +45,12 @@ function saveTodo(todo) {
   });
 }
 
+/**
+ * Retrieve a Todo from the DB
+ *
+ * @param {String} id Of the Todo that will be searched
+ * @return {Promise} It no error it will return the Todo
+ */
 function findTodo(id) {
   return new Promise((resolve, reject) => {
     Todo.findById(id).then((todo) => {
@@ -52,6 +71,12 @@ function findTodo(id) {
   });
 }
 
+/**
+ * Remove a Todo from the DB
+ *
+ * @param {String} id Of the Todo that will be deleted
+ * @return {Promise} If no error it will return the Todo deleted
+ */
 function removeTodo(id) {
   return new Promise((resolve, reject) => {
     Todo.findByIdAndRemove(id).then((todo) => {
@@ -72,6 +97,13 @@ function removeTodo(id) {
   });
 }
 
+/**
+ * Update a Todo from the DB
+ *
+ * @param {String} id Of the Todo that will be updated
+ * @param {String} body The new body of the todo
+ * @return {Promise} If no error it will return the Todo updated
+ */
 function updateTodo(id, body) {
   return new Promise((resolve, reject) => {
     Todo.findByIdAndUpdate(id, { $set: body }, { new: true }).then((todo) => {
