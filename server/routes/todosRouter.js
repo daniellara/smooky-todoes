@@ -1,12 +1,11 @@
 const express = require('express');
 
 const todosRouter = express.Router();
-const dbHandler = require('../db/todosHandler');
-const _ = require('lodash');
+const todosController = require('../controllers/todosController');
 
 todosRouter.route('/')
   .get((req, res) => {
-    dbHandler.findTodos()
+    todosController.getTodos()
       .then((value) => {
         res.send({ todos: value.data });
       })
@@ -15,7 +14,7 @@ todosRouter.route('/')
       });
   })
   .post((req, res) => {
-    dbHandler.saveTodo(req.body.text)
+    todosController.saveTodo(req.body.text)
       .then((value) => {
         res.send(value.data);
       })
@@ -26,7 +25,7 @@ todosRouter.route('/')
 
 todosRouter.route('/:id')
   .get((req, res) => {
-    dbHandler.findTodo(req.params.id)
+    todosController.getTodo(req.params.id)
       .then((value) => {
         res.send({ todo: value.data });
       })
@@ -35,7 +34,7 @@ todosRouter.route('/:id')
       });
   })
   .delete((req, res) => {
-    dbHandler.removeTodo(req.params.id)
+    todosController.removeTodo(req.params.id)
       .then((value) => {
         res.send({ todo: value.data });
       })
@@ -44,9 +43,7 @@ todosRouter.route('/:id')
       });
   })
   .patch((req, res) => {
-    const id = req.params.id;
-    const body = _.pick(req.body, ['text', 'completed']);
-    dbHandler.updateTodo(id, body)
+    todosController.updateTodo(req)
       .then((value) => {
         res.send({ todo: value.data });
       })
