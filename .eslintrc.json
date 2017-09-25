@@ -6,6 +6,13 @@
   "rules": {
     "consistent-return": 0,
     "no-underscore-dangle": 0,
-    "no-param-reassign": 0
+    "no-param-reassign": 0,
+    "comma-dangle": ["error", {
+      "arrays": "never",
+      "objects": "never",
+      "imports": "never",
+      "exports": "never",
+      "functions": "ignore"
+  }]
   }
 }

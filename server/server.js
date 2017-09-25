@@ -1,67 +1,26 @@
+/**
+ * Main file that launch the server
+ */
+require('./config/config');
+
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
-const mongoose = require('./db/mongoose');
-const dbHandler = require('./db/dbHandler');
-
-const _ = require('lodash');
-
-mongoose.connectToMongoDB();
+const { todosRouter } = require('./routes/todosRouter.js');
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT;
 
+// Configure mongoose
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGODB_URI);
+
+// Configure the server
 app.use(bodyParser.json());
+app.use('/todos', todosRouter);
 
-app.route('/todos')
-  .get((req, res) => {
-    dbHandler.findTodos().then((value) => {
-      res.send({
-        todos: value.data,
-      });
-    }).catch((err) => {
-      res.status(err.code).send({ message: err.errObj });
-    });
-  })
-  .post((req, res) => {
-    dbHandler.saveTodo(req.body.text).then((value) => {
-      res.send(value.data);
-    }).catch((err) => {
-      res.status(err.code).send({ message: err.errObj });
-    });
-  });
-
-app.route('/todos/:id')
-  .get((req, res) => {
-    dbHandler.findTodo(req.params.id).then((value) => {
-      res.send({
-        todo: value.data,
-      });
-    }).catch((err) => {
-      res.status(err.code).send({ message: err.message });
-    });
-  })
-  .delete((req, res) => {
-    dbHandler.removeTodo(req.params.id).then((value) => {
-      res.send({
-        todo: value.data,
-      });
-    }).catch((err) => {
-      res.status(err.code).send({ message: err.message });
-    });
-  })
-  .patch((req, res) => {
-    const id = req.params.id;
-    const body = _.pick(req.body, ['text', 'completed']);
-    dbHandler.updateTodo(id, body).then((value) => {
-      res.send({
-        todo: value.data,
-      });
-    }).catch((err) => {
-      res.status(err.code).send({ message: err.message });
-    });
-  });
-
+// Launcher the server
 app.listen(port);
 
 module.exports = { app };

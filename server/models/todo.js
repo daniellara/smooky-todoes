@@ -1,3 +1,6 @@
+/**
+ * Mongoose model for Todos
+ */
 const mongoose = require('mongoose');
 
 const Todo = mongoose.model('Todo', {
@@ -5,16 +8,16 @@ const Todo = mongoose.model('Todo', {
     type: String,
     required: true,
     minlength: 1,
-    trim: true,
+    trim: true
   },
   completed: {
     type: Boolean,
-    default: false,
+    default: false
   },
   completedAt: {
     type: Number,
-    default: null,
-  },
+    default: null
+  }
 });
 
 module.exports = { Todo };

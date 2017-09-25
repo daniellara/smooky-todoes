@@ -1,3 +1,6 @@
+/**
+ * File that contains unitary test for Todo enpoints
+ */
 const expect = require('expect');
 const request = require('supertest');
 const { ObjectID } = require('mongodb');
@@ -8,31 +11,31 @@ const { Todo } = require('../server/models/todo');
 const todos = [
   {
     _id: new ObjectID(),
-    text: 'First test todo',
+    text: 'First test todo'
   },
   {
     _id: new ObjectID(),
     text: 'Second test todo',
     completed: true,
-    completedAt: 333,
-  },
+    completedAt: 333
+  }
 ];
 
 const updatedFirst = {
   text: 'Todo updated from test',
-  completed: true,
+  completed: true
 };
 
 const updatedSecond = {
   text: 'Second todo updated from test',
-  completed: false,
+  completed: false
 };
 
 beforeEach((done) => {
   Todo.remove({}).then(() => Todo.insertMany(todos)).then(() => done());
 });
 
-describe('Server', () => {
+describe('Todo endpoints', () => {
   describe('POST /todos', () => {
     it('should create a new todo', (done) => {
       const text = 'Test todo text';

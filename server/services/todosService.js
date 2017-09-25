@@ -1,125 +1,125 @@
-const { ObjectID } = require('mongodb');
+// Service layer for the Todos.
 const { Todo } = require('../models/todo');
-const _ = require('lodash');
 
+/**
+ * Retrieve all the Todos from the DB
+ *
+ * @method findTodos
+ * @return {Promise} If no error it will return an array of Todos
+ */
 function findTodos() {
   return new Promise((resolve, reject) => {
     Todo.find().then((todos) => {
       resolve({
-        data: todos,
+        data: todos
       });
     }).catch((err) => {
       reject({
         code: 400,
         message: 'Cannot find todos',
-        errObj: err,
+        errObj: err
       });
     });
   });
 }
 
-function saveTodo(todoText) {
-  const todo = new Todo({
-    text: todoText,
-  });
+/**
+ * Save a Todo in the DB
+ *
+ * @param {Object} todo To save in the DB
+ * @return {Promise} If no error it will return the Todo saved
+ */
+function saveTodo(todo) {
   return new Promise((resolve, reject) => {
     todo.save().then((doc) => {
       resolve({
-        data: doc,
+        data: doc
       });
     }).catch((err) => {
       reject({
         code: 400,
         message: 'Cannot save the todo',
-        errObj: err,
+        errObj: err
       });
     });
   });
 }
 
+/**
+ * Retrieve a Todo from the DB
+ *
+ * @param {String} id Of the Todo that will be searched
+ * @return {Promise} It no error it will return the Todo
+ */
 function findTodo(id) {
   return new Promise((resolve, reject) => {
-    if (!ObjectID.isValid(id)) {
-      return reject({
-        code: 400,
-        message: 'ID not valid',
-      });
-    }
     Todo.findById(id).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,
-          message: 'ID not found',
+          message: 'ID not found'
         });
       }
       return resolve({
-        data: todo,
+        data: todo
       });
     }).catch(err => reject({
       code: 400,
       message: 'An error happened fetching the todo',
-      errObj: err,
+      errObj: err
     }));
   });
 }
 
+/**
+ * Remove a Todo from the DB
+ *
+ * @param {String} id Of the Todo that will be deleted
+ * @return {Promise} If no error it will return the Todo deleted
+ */
 function removeTodo(id) {
   return new Promise((resolve, reject) => {
-    if (!ObjectID.isValid(id)) {
-      return reject({
-        code: 400,
-        message: 'ID not valid',
-      });
-    }
-
     Todo.findByIdAndRemove(id).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,
-          message: 'ID not found',
+          message: 'ID not found'
         });
       }
       return resolve({
-        data: todo,
+        data: todo
       });
     }).catch(err => reject({
       code: 400,
       message: 'An error happened removing the todo',
-      errObj: err,
+      errObj: err
     }));
   });
 }
 
+/**
+ * Update a Todo from the DB
+ *
+ * @param {String} id Of the Todo that will be updated
+ * @param {String} body The new body of the todo
+ * @return {Promise} If no error it will return the Todo updated
+ */
 function updateTodo(id, body) {
   return new Promise((resolve, reject) => {
-    if (!ObjectID.isValid(id)) {
-      return reject({
-        code: 400,
-        message: 'ID not valid',
-      });
-    }
-
-    if (_.isBoolean(body.completed) && body.completed) {
-      body.completedAt = new Date().getTime();
-    } else {
-      body.completed = false;
-      body.completedAt = null;
-    }
-
     Todo.findByIdAndUpdate(id, { $set: body }, { new: true }).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,
-          message: 'ID not found',
+          message: 'ID not found'
         });
       }
       return resolve({
-        data: todo,
+        data: todo
       });
     }).catch(err => reject({
       code: 400,
       message: 'An error happened removing the todo',
-      errObj: err,
+      errObj: err
     }));
   });
 }
@@ -129,5 +129,5 @@ module.exports = {
   saveTodo,
   findTodo,
   removeTodo,
-  updateTodo,
+  updateTodo
 };
