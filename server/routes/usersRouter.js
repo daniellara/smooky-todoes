@@ -9,9 +9,9 @@ const usersController = require('../controllers/usersController');
 
 usersRouter.route('/')
   .post((req, res) => {
-    usersController.saveUser(req)
-      .then((value) => {
-        res.send({ users: value.data });
+    usersController.signUpUser(req)
+      .then((result) => {
+        res.header('x-auth', result.token).send({ user: result.user });
       })
       .catch((err) => {
         res.status(err.code).send({ message: err.errObj });

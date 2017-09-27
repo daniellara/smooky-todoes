@@ -4,19 +4,18 @@
  */
 const _ = require('lodash');
 
-const usersService = require('../services/usersService');
 const { User } = require('../models/user');
 
-function saveUser(req) {
+function signUpUser(req) {
   const body = _.pick(req.body, ['email', 'password']);
   const user = new User({
     email: body.email,
     password: body.password
   });
 
-  return usersService.saveUser(user);
+  return user.signUp();
 }
 
 module.exports = {
-  saveUser
+  signUpUser
 };

@@ -1,7 +1,9 @@
 {
   "extends": "airbnb",
   "env": {
-    "mocha": true
+    "mocha": true,
+    "es6": true,
+    "node": true
   },
   "rules": {
     "consistent-return": 0,
@@ -13,6 +15,7 @@
       "imports": "never",
       "exports": "never",
       "functions": "ignore"
-  }]
+    }],
+    "func-names": 0
   }
 }
