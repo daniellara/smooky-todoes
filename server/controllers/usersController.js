@@ -13,9 +13,38 @@ function signUpUser(req) {
     password: body.password
   });
 
-  return user.signUp();
+  return user.signUp()
+    .then(value => Promise.resolve(value))
+    .catch((err) => {
+      if (err.code === 11000) {
+        return Promise.reject({
+          code: 400,
+          message: 'User already in use'
+        });
+      } else if (err.errors.email) {
+        return Promise.reject({
+          code: 400,
+          message: err.errors.email.message
+        });
+      }
+      return Promise.reject({
+        code: 500,
+        message: 'Unexpected error'
+      });
+    });
+}
+
+function getUser(req) {
+  const token = req.header('x-auth');
+  return User.findByToken(token)
+    .then(user => Promise.resolve(user))
+    .catch(err => Promise.reject({
+      code: 500,
+      message: err
+    }));
 }
 
 module.exports = {
-  signUpUser
+  signUpUser,
+  getUser
 };

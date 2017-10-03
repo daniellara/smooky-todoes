@@ -1,7 +1,7 @@
 /**
  * Main file that launch the server
  */
-require('./config/config');
+const config = require('./config/config');
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -9,6 +9,8 @@ const mongoose = require('mongoose');
 
 const { todosRouter } = require('./routes/todosRouter');
 const { usersRouter } = require('./routes/usersRouter');
+
+config.setEnvConf();
 
 const app = express();
 const port = process.env.PORT;

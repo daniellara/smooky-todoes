@@ -2,10 +2,11 @@
  * Mongoose model for User
  */
 const mongoose = require('mongoose');
-
 const val = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+
+const config = require('../config/config');
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -16,7 +17,7 @@ const UserSchema = new mongoose.Schema({
     unique: true,
     validate: {
       validator: value => val.isEmail(value),
-      message: '{VALUE} is not defined'
+      message: '{VALUE} is not a valid email'
     }
   },
   password: {
@@ -37,7 +38,7 @@ const UserSchema = new mongoose.Schema({
 });
 
 function _generateAuthToken(user, access) {
-  const token = jwt.sign({ _id: user._id.toHexString(), access }, 'abc123');
+  const token = jwt.sign({ _id: user._id.toHexString(), access }, config.secretJWT);
   user.tokens.push({ access, token });
   return token;
 }
@@ -52,7 +53,26 @@ UserSchema.methods.signUp = function () {
   const user = this;
   const token = _generateAuthToken(user, 'auth');
   const result = { user, token };
-  return user.save().then(() => result);
+  return user.save()
+    .then(() => Promise.resolve(result))
+    .catch(err => Promise.reject(err));
+};
+
+UserSchema.statics.findByToken = function (token) {
+  const User = this;
+  let decoded;
+
+  try {
+    decoded = jwt.verify(token, config.secretJWT);
+  } catch (err) {
+    throw new Error(err);
+  }
+
+  return User.findOne({
+    _id: decoded._id,
+    'tokens.token': token,
+    'tokens.access': 'auth'
+  });
 };
 
 const User = mongoose.model('User', UserSchema);
