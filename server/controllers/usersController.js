@@ -37,7 +37,15 @@ function signUpUser(req) {
 function getUser(req) {
   const token = req.header('x-auth');
   return User.findByToken(token)
-    .then(user => Promise.resolve(user))
+    .then((user) => {
+      if (!user) {
+        return Promise.reject({
+          code: 400,
+          errMessage: 'User not found'
+        });
+      }
+      return Promise.resolve(user);
+    })
     .catch(err => Promise.reject({
       code: 500,
       message: err
