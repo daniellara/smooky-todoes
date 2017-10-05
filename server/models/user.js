@@ -5,8 +5,11 @@ const mongoose = require('mongoose');
 const val = require('validator');
 const jwt = require('jsonwebtoken');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 
 const config = require('../config/config');
+
+const SALT_ROUNDS = 12;
 
 const UserSchema = new mongoose.Schema({
   email: {
@@ -74,6 +77,20 @@ UserSchema.statics.findByToken = function (token) {
     'tokens.access': 'auth'
   });
 };
+
+UserSchema.pre('save', function (next) {
+  const user = this;
+
+  if (user.isModified('password')) {
+    bcrypt.hash(user.password, SALT_ROUNDS)
+      .then((hash) => {
+        user.password = hash;
+        next();
+      });
+  } else {
+    next();
+  }
+});
 
 const User = mongoose.model('User', UserSchema);
 

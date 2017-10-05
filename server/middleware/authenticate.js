@@ -13,7 +13,9 @@ function authenticate(req, res, next) {
       next();
     })
     .catch(() => {
-      res.status(401).send('Unautorized');
+      res.status(401).send({
+        errMessage: 'Unauthorized'
+      });
     });
 }
 
