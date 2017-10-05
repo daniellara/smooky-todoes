@@ -7,6 +7,8 @@ const express = require('express');
 const usersRouter = express.Router();
 const usersController = require('../controllers/usersController');
 
+const { authenticate } = require('../middleware/authenticate');
+
 usersRouter.route('/')
   .post((req, res) => {
     usersController.signUpUser(req)
@@ -18,11 +20,12 @@ usersRouter.route('/')
       });
   });
 
+
+usersRouter.use('/me', authenticate);
+
 usersRouter.route('/me')
   .get((req, res) => {
-    usersController.getUser(req)
-      .then(user => res.send({ user }))
-      .catch(err => res.status(err.code).send({ errMessage: err.message }));
+    res.send(req.user);
   });
 
 module.exports = { usersRouter };
