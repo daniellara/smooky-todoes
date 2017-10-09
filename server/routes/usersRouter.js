@@ -25,7 +25,7 @@ usersRouter.use('/me', authenticate);
 
 usersRouter.route('/me')
   .get((req, res) => {
-    res.send(req.user);
+    res.send({ user: req.user });
   });
 
 module.exports = { usersRouter };
