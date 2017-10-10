@@ -36,5 +36,15 @@ usersRouter.route('/login')
       });
   });
 
+usersRouter.route('/me/token')
+  .delete(authenticate, (req, res) => {
+    usersController.logoutUser(req)
+      .then((result) => {
+        res.status(200).send(result);
+      })
+      .catch((err) => {
+        res.status(400).send({ errMessage: err });
+      });
+  });
 
 module.exports = { usersRouter };

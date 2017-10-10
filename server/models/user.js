@@ -61,6 +61,18 @@ UserSchema.methods.signUp = function () {
     .catch(err => Promise.reject(err));
 };
 
+UserSchema.methods.removeToken = function (token) {
+  const user = this;
+
+  return user.update({
+    $pull: {
+      tokens: {
+        token
+      }
+    }
+  });
+};
+
 UserSchema.statics.findByToken = function (token) {
   const User = this;
   let decoded;

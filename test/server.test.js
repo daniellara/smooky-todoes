@@ -313,4 +313,22 @@ describe('Users endpoints', () => {
         });
     });
   });
+
+  describe('DELETE /users/me/token', () => {
+    it('should remove auth token on logout', (done) => {
+      request(app)
+        .delete('/users/me/token')
+        .set('x-auth', users[0].tokens[0].token)
+        .expect(200)
+        .end((err) => {
+          if (err) {
+            done(err);
+          }
+          User.findById(users[1]._id).then((user) => {
+            expect(user.tokens.length).toBe(0);
+            done();
+          }).catch(error => done(error));
+        });
+    });
+  });
 });

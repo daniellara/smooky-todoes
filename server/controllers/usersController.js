@@ -40,7 +40,14 @@ function loginUser(req) {
   return User.findByCredentials(body.email, body.password);
 }
 
+function logoutUser(req) {
+  return req.user.removeToken(req.token)
+    .then(() => Promise.resolve({ message: 'Logout successfully' }))
+    .catch(err => Promise.reject(err));
+}
+
 module.exports = {
   signUpUser,
-  loginUser
+  loginUser,
+  logoutUser
 };
