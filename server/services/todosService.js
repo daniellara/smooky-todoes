@@ -7,9 +7,11 @@ const { Todo } = require('../models/todo');
  * @method findTodos
  * @return {Promise} If no error it will return an array of Todos
  */
-function findTodos() {
+function findTodos(req) {
   return new Promise((resolve, reject) => {
-    Todo.find().then((todos) => {
+    Todo.find({
+      _creator: req.user._id
+    }).then((todos) => {
       resolve({
         data: todos
       });

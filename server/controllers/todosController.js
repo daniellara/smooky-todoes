@@ -16,8 +16,8 @@ const { Todo } = require('../models/todo');
  * @method getTodos
  * @return {Promise} Promise for getting the todos
  */
-function getTodos() {
-  return todosService.findTodos();
+function getTodos(req) {
+  return todosService.findTodos(req);
 }
 
 /**
@@ -28,9 +28,10 @@ function getTodos() {
  * @param {String} text Text of the new todo
  * @return {Promise} Promise for save a todo
  */
-function saveTodo(text) {
+function saveTodo(req) {
   const todo = new Todo({
-    text
+    text: req.body.text,
+    _creator: req.user._id
   });
   return todosService.saveTodo(todo);
 }

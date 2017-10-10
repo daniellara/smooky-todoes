@@ -6,13 +6,15 @@ const express = require('express');
 const todosRouter = express.Router();
 const todosController = require('../controllers/todosController');
 
+const { authenticate } = require('../middleware/authenticate');
+
 /**
  * GET  /todos -> retrieve all Todos
  * POST /todos -> insert a Todo in the DB
  */
 todosRouter.route('/')
-  .get((req, res) => {
-    todosController.getTodos()
+  .get(authenticate, (req, res) => {
+    todosController.getTodos(req)
       .then((value) => {
         res.send({ todos: value.data });
       })
@@ -20,8 +22,8 @@ todosRouter.route('/')
         res.status(err.code).send({ message: err.errObj });
       });
   })
-  .post((req, res) => {
-    todosController.saveTodo(req.body.text)
+  .post(authenticate, (req, res) => {
+    todosController.saveTodo(req)
       .then((value) => {
         res.send(value.data);
       })
