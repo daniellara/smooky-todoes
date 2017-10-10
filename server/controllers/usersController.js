@@ -34,6 +34,13 @@ function signUpUser(req) {
     });
 }
 
+function loginUser(req) {
+  const body = _.pick(req.body, ['email', 'password']);
+
+  return User.findByCredentials(body.email, body.password);
+}
+
 module.exports = {
-  signUpUser
+  signUpUser,
+  loginUser
 };

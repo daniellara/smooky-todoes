@@ -223,7 +223,7 @@ describe('Users endpoints', () => {
             expect(user).toExist();
             expect(user.password).toNotBe(password);
             done();
-          });
+          }).catch(error => done(error));
         });
     });
 
@@ -244,6 +244,73 @@ describe('Users endpoints', () => {
         .send({ email: users[0].email, password: users[0].password })
         .expect(400)
         .end(done);
+    });
+  });
+
+  describe('POST /users/login', () => {
+    it('should login user and return auth token', (done) => {
+      request(app)
+        .post('/users/login')
+        .send({
+          email: users[1].email,
+          password: users[1].password
+        })
+        .expect(200)
+        .expect((res) => {
+          expect(res.headers['x-auth']).toExist();
+        })
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          User.findById(users[1]._id).then((user) => {
+            expect(user.tokens[0]).toInclude({
+              access: 'auth',
+              token: res.headers['x-auth']
+            });
+            done();
+          }).catch(error => done(error));
+        });
+    });
+
+    it('should reject the login due the user does not exist', (done) => {
+      request(app)
+        .post('/users/login')
+        .send({
+          email: 'test@mail.com',
+          password: users[1].password
+        })
+        .expect(400)
+        .expect((res) => {
+          expect(res.headers['x-auth']).toNotExist();
+        })
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          expect(res.body.errMessage).toBe('The user does not exist.');
+          done();
+        });
+    });
+
+    it('should reject the login due wrong password', (done) => {
+      request(app)
+        .post('/users/login')
+        .send({
+          email: users[1].email,
+          password: 'aaaa'
+        })
+        .expect(400)
+        .expect((res) => {
+          expect(res.headers['x-auth']).toNotExist();
+        })
+        .end((err, res) => {
+          if (err) {
+            done(err);
+          }
+          expect(res.body.errMessage).toBe('Wrong password.');
+          done();
+        });
     });
   });
 });
