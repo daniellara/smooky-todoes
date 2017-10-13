@@ -7,9 +7,11 @@ const { Todo } = require('../models/todo');
  * @method findTodos
  * @return {Promise} If no error it will return an array of Todos
  */
-function findTodos() {
+function findTodos(req) {
   return new Promise((resolve, reject) => {
-    Todo.find().then((todos) => {
+    Todo.find({
+      _creator: req.user._id
+    }).then((todos) => {
       resolve({
         data: todos
       });
@@ -51,23 +53,26 @@ function saveTodo(todo) {
  * @param {String} id Of the Todo that will be searched
  * @return {Promise} It no error it will return the Todo
  */
-function findTodo(id) {
+function findTodo(todoId, userId) {
   return new Promise((resolve, reject) => {
-    Todo.findById(id).then((todo) => {
-      if (!todo) {
-        return reject({
-          code: 404,
-          message: 'ID not found'
+    Todo.findOne(
+      { _id: todoId,
+        _creator: userId })
+      .then((todo) => {
+        if (!todo) {
+          return reject({
+            code: 404,
+            message: 'ID not found'
+          });
+        }
+        return resolve({
+          data: todo
         });
-      }
-      return resolve({
-        data: todo
-      });
-    }).catch(err => reject({
-      code: 400,
-      message: 'An error happened fetching the todo',
-      errObj: err
-    }));
+      }).catch(err => reject({
+        code: 400,
+        message: 'An error happened fetching the todo',
+        errObj: err
+      }));
   });
 }
 
@@ -77,9 +82,12 @@ function findTodo(id) {
  * @param {String} id Of the Todo that will be deleted
  * @return {Promise} If no error it will return the Todo deleted
  */
-function removeTodo(id) {
+function removeTodo(todoId, userId) {
   return new Promise((resolve, reject) => {
-    Todo.findByIdAndRemove(id).then((todo) => {
+    Todo.findOneAndRemove(
+      { _id: todoId,
+        _creator: userId
+      }).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,
@@ -104,9 +112,10 @@ function removeTodo(id) {
  * @param {String} body The new body of the todo
  * @return {Promise} If no error it will return the Todo updated
  */
-function updateTodo(id, body) {
+function updateTodo(todoId, userId, body) {
   return new Promise((resolve, reject) => {
-    Todo.findByIdAndUpdate(id, { $set: body }, { new: true }).then((todo) => {
+    Todo.findOneAndUpdate({ _id: todoId, _creator: userId },
+      { $set: body }, { new: true }).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,

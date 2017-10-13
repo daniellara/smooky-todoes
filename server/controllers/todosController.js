@@ -16,8 +16,8 @@ const { Todo } = require('../models/todo');
  * @method getTodos
  * @return {Promise} Promise for getting the todos
  */
-function getTodos() {
-  return todosService.findTodos();
+function getTodos(req) {
+  return todosService.findTodos(req);
 }
 
 /**
@@ -28,9 +28,10 @@ function getTodos() {
  * @param {String} text Text of the new todo
  * @return {Promise} Promise for save a todo
  */
-function saveTodo(text) {
+function saveTodo(req) {
   const todo = new Todo({
-    text
+    text: req.body.text,
+    _creator: req.user._id
   });
   return todosService.saveTodo(todo);
 }
@@ -43,14 +44,14 @@ function saveTodo(text) {
  * @param {String} id The id of the todo to search
  * @return {Promise} Promise for get a todo
  */
-function getTodo(id) {
-  if (!ObjectID.isValid(id)) {
+function getTodo(req) {
+  if (!ObjectID.isValid(req.params.id)) {
     return Promise.reject({
       code: 400,
       message: 'ID not valid'
     });
   }
-  return todosService.findTodo(id);
+  return todosService.findTodo(req.params.id, req.user._id);
 }
 
 /**
@@ -61,14 +62,14 @@ function getTodo(id) {
  * @param {String} id The id of the todo to remove
  * @return {Promise} Promise for remove a todo
  */
-function removeTodo(id) {
-  if (!ObjectID.isValid(id)) {
+function removeTodo(req) {
+  if (!ObjectID.isValid(req.params.id)) {
     return Promise.reject({
       code: 400,
       message: 'ID not valid'
     });
   }
-  return todosService.removeTodo(id);
+  return todosService.removeTodo(req.params.id, req.user._id);
 }
 
 /**
@@ -94,7 +95,7 @@ function updateTodo(req) {
     body.completed = false;
     body.completedAt = null;
   }
-  return todosService.updateTodo(id, body);
+  return todosService.updateTodo(id, req.user._id, body);
 }
 
 module.exports = {
