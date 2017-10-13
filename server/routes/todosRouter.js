@@ -38,8 +38,8 @@ todosRouter.route('/')
  * PATCH  /todos/:id -> update the Todo that matchs with the id
  */
 todosRouter.route('/:id')
-  .get((req, res) => {
-    todosController.getTodo(req.params.id)
+  .get(authenticate, (req, res) => {
+    todosController.getTodo(req)
       .then((value) => {
         res.send({ todo: value.data });
       })

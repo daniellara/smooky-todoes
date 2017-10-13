@@ -44,14 +44,14 @@ function saveTodo(req) {
  * @param {String} id The id of the todo to search
  * @return {Promise} Promise for get a todo
  */
-function getTodo(id) {
-  if (!ObjectID.isValid(id)) {
+function getTodo(req) {
+  if (!ObjectID.isValid(req.params.id)) {
     return Promise.reject({
       code: 400,
       message: 'ID not valid'
     });
   }
-  return todosService.findTodo(id);
+  return todosService.findTodo(req.params.id, req.user._id);
 }
 
 /**

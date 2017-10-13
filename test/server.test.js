@@ -76,6 +76,7 @@ describe('Todo endpoints', () => {
     it('should return todo doc', (done) => {
       request(app)
         .get(`/todos/${todos[0]._id.toHexString()}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(200)
         .expect((res) => {
           expect(res.body.todo.text).toBe(todos[0].text);
@@ -86,6 +87,7 @@ describe('Todo endpoints', () => {
     it('should return 404 if todo not found', (done) => {
       request(app)
         .get(`/todos/${new ObjectID()}`)
+        .set('x-auth', users[0].tokens[0].token)
         .expect(404)
         .end(done);
     });
@@ -93,6 +95,7 @@ describe('Todo endpoints', () => {
     it('should return 400 if the id is not valid', (done) => {
       request(app)
         .get('/todos/123')
+        .set('x-auth', users[0].tokens[0].token)
         .expect(400)
         .end(done);
     });
@@ -267,7 +270,7 @@ describe('Users endpoints', () => {
             done(err);
           }
           User.findById(users[1]._id).then((user) => {
-            expect(user.tokens[0]).toInclude({
+            expect(user.tokens[1]).toInclude({
               access: 'auth',
               token: res.headers['x-auth']
             });
@@ -328,7 +331,7 @@ describe('Users endpoints', () => {
             done(err);
           }
           User.findById(users[1]._id).then((user) => {
-            expect(user.tokens.length).toBe(0);
+            expect(user.tokens.length).toBe(1);
             done();
           }).catch(error => done(error));
         });

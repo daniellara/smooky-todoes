@@ -53,23 +53,26 @@ function saveTodo(todo) {
  * @param {String} id Of the Todo that will be searched
  * @return {Promise} It no error it will return the Todo
  */
-function findTodo(id) {
+function findTodo(todoId, userId) {
   return new Promise((resolve, reject) => {
-    Todo.findById(id).then((todo) => {
-      if (!todo) {
-        return reject({
-          code: 404,
-          message: 'ID not found'
+    Todo.findOne(
+      { _id: todoId,
+        _creator: userId })
+      .then((todo) => {
+        if (!todo) {
+          return reject({
+            code: 404,
+            message: 'ID not found'
+          });
+        }
+        return resolve({
+          data: todo
         });
-      }
-      return resolve({
-        data: todo
-      });
-    }).catch(err => reject({
-      code: 400,
-      message: 'An error happened fetching the todo',
-      errObj: err
-    }));
+      }).catch(err => reject({
+        code: 400,
+        message: 'An error happened fetching the todo',
+        errObj: err
+      }));
   });
 }
 
