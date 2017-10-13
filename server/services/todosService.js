@@ -82,9 +82,12 @@ function findTodo(todoId, userId) {
  * @param {String} id Of the Todo that will be deleted
  * @return {Promise} If no error it will return the Todo deleted
  */
-function removeTodo(id) {
+function removeTodo(todoId, userId) {
   return new Promise((resolve, reject) => {
-    Todo.findByIdAndRemove(id).then((todo) => {
+    Todo.findOneAndRemove(
+      { _id: todoId,
+        _creator: userId
+      }).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,
@@ -109,9 +112,10 @@ function removeTodo(id) {
  * @param {String} body The new body of the todo
  * @return {Promise} If no error it will return the Todo updated
  */
-function updateTodo(id, body) {
+function updateTodo(todoId, userId, body) {
   return new Promise((resolve, reject) => {
-    Todo.findByIdAndUpdate(id, { $set: body }, { new: true }).then((todo) => {
+    Todo.findOneAndUpdate({ _id: todoId, _creator: userId },
+      { $set: body }, { new: true }).then((todo) => {
       if (!todo) {
         return reject({
           code: 404,

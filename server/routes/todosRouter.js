@@ -47,8 +47,8 @@ todosRouter.route('/:id')
         res.status(err.code).send({ message: err.message });
       });
   })
-  .delete((req, res) => {
-    todosController.removeTodo(req.params.id)
+  .delete(authenticate, (req, res) => {
+    todosController.removeTodo(req)
       .then((value) => {
         res.send({ todo: value.data });
       })
@@ -56,7 +56,7 @@ todosRouter.route('/:id')
         res.status(err.code).send({ message: err.message });
       });
   })
-  .patch((req, res) => {
+  .patch(authenticate, (req, res) => {
     todosController.updateTodo(req)
       .then((value) => {
         res.send({ todo: value.data });

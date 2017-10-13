@@ -62,14 +62,14 @@ function getTodo(req) {
  * @param {String} id The id of the todo to remove
  * @return {Promise} Promise for remove a todo
  */
-function removeTodo(id) {
-  if (!ObjectID.isValid(id)) {
+function removeTodo(req) {
+  if (!ObjectID.isValid(req.params.id)) {
     return Promise.reject({
       code: 400,
       message: 'ID not valid'
     });
   }
-  return todosService.removeTodo(id);
+  return todosService.removeTodo(req.params.id, req.user._id);
 }
 
 /**
@@ -95,7 +95,7 @@ function updateTodo(req) {
     body.completed = false;
     body.completedAt = null;
   }
-  return todosService.updateTodo(id, body);
+  return todosService.updateTodo(id, req.user._id, body);
 }
 
 module.exports = {
